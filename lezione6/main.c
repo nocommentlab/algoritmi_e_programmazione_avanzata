@@ -18,8 +18,11 @@ struct Element
 
 void initList(struct Element **pElementList)
 
-{   (*pElementList)->BOOL_HasElements = FALSE;
-    (*pElementList)->pNextElement = NULL;
+{   
+    /*  Imposta a NULL il puntatore.
+        Il puntatore di una lista vuota punta sempre a NULL
+      */
+    (*pElementList)=NULL;
 
 }
 
@@ -38,6 +41,7 @@ UINT32_T countListElements(struct Element **pElementList)
     } 
     return UINT32_Counter;
 }
+
 void requestNewElement(struct Element **pElement)
 {
     
@@ -59,25 +63,36 @@ void pushHeadElement(struct Element **pElementList, struct Element *pElement)
 /* Inserimento in coda */
 void push(struct Element **pElementList, struct Element *pElement)
 {
+    // Dichiaro un puntatore d'appoggio
     struct Element *pLastElement;
 
+    /* Imposto a NULL il puntatore del prossimo elemento.
+        L'ultimo elemento ha il puntatore di successione sempre impostato a NULL
+    */  
     pElement->pNextElement = NULL;
 
     /* Verifica che non siano presenti altri elementi nulla lista */
-   if((*pElementList)->BOOL_HasElements == FALSE)
-   {
-       pElement->BOOL_HasElements = TRUE;
-       pElement->pNextElement = NULL;
-       (*pElementList) = pElement;
-   }
-   else
-   {
+    if((*pElementList) == NULL)
+    {
+        // Non essendoci altri elementi, sposta il puntatore alla locazione
+        // di memoria dell'elemento passato tramite parametro
+        (*pElementList) = pElement;
+    }
+    else
+    {
         /*  Se ci sono elementi, trovo l'ultimo elemento della chain ed accodo il nuovo elemento*/
+        
+        /*  Faccio puntatore il puntatore temporaneo alla testa della lista */
         pLastElement = *pElementList;
+        /* Ciclo sin quando e' presente un elemento successivo */
         while(pLastElement->pNextElement != NULL)
         {
-           pLastElement = pLastElement->pNextElement;
+            /*  Faccio puntatore il puntatore temporaneo all'elemento successivo */
+            pLastElement = pLastElement->pNextElement;
         }
+        /* Aggiorno l'indirizzo del puntatore all'elemento successivo dell'ultimo elemento
+            con l'indirizzo di memoria dell'elemento passato per argomento.
+        */
         pLastElement->pNextElement = pElement;
        
    }    
@@ -157,8 +172,11 @@ void printList(struct Element  **pElementsList)
 
 int main()
 {
+    // Dichiaro la lista degli elementi
     struct Element *pElementsList;
+    // Allocazione di memoria utilizzata per gli elementi da aggiungere
     struct Element *pElement;
+
     struct Element *pElementPopped;
     struct Element *pHeadElement;
 
@@ -173,7 +191,7 @@ int main()
 
     push(&pElementsList, pElement);
 
-    requestNewElement(&pElement);
+    /* requestNewElement(&pElement);
 
     push(&pElementsList, pElement);
 
@@ -182,7 +200,11 @@ int main()
     push(&pElementsList, pElement);
 
     requestNewElement(&pElement);
-    insertElementAt(&pElementsList, pElement, 0);
+
+    push(&pElementsList, pElement);
+
+    requestNewElement(&pElement);
+    insertElementAt(&pElementsList, pElement, 0); */
 
     printList(&pElementsList);
     
