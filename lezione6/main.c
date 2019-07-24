@@ -28,12 +28,15 @@ void initList(struct Element **pElementList)
 
 UINT32_T countListElements(struct Element **pElementList)
 {
+    
     UINT32_T UINT32_Counter=0;
     struct Element *pTempElement;
     
     pTempElement = *pElementList;
+    
     if((*pElementList)->pNextElement == NULL) return 0;
     UINT32_Counter++;
+    
     while(pTempElement->pNextElement != NULL)
     {
         pTempElement = pTempElement->pNextElement;
@@ -101,8 +104,10 @@ void push(struct Element **pElementList, struct Element *pElement)
 /* Cancellazione in testa */
 void pop(struct Element **pElementList, struct Element **pElement)
 {
-
+    /* Assegna all'indirizzo dell'elemento passato come parametro
+        l'indirizzo dell'elemento in testa della coda */
     *pElement = *pElementList;
+    /* Assegna l'indirizzo del secondo elemento presente in coda come testa della lista */
     *pElementList = (*pElementList)->pNextElement;
 }
 
@@ -190,6 +195,8 @@ int main()
     requestNewElement(&pElement);
 
     push(&pElementsList, pElement);
+
+    printf("%d\n", countListElements(&pElementsList));
 
     /* requestNewElement(&pElement);
 
