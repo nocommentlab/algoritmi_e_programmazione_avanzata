@@ -187,7 +187,9 @@ int main()
 
     initList(&pElementsList);
     
-
+    /* Semplice sezione di debug!
+        Andrebbe implementato un ciclo ma ora non ne ho voglia!
+    */
     requestNewElement(&pElement);
 
     push(&pElementsList, pElement);
@@ -198,20 +200,6 @@ int main()
 
     printf("%d\n", countListElements(&pElementsList));
 
-    /* requestNewElement(&pElement);
-
-    push(&pElementsList, pElement);
-
-    requestNewElement(&pElement);
-
-    push(&pElementsList, pElement);
-
-    requestNewElement(&pElement);
-
-    push(&pElementsList, pElement);
-
-    requestNewElement(&pElement);
-    insertElementAt(&pElementsList, pElement, 0); */
 
     printList(&pElementsList);
     
