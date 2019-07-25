@@ -29,25 +29,36 @@ void initList(struct Element **pElementList)
 UINT32_T countListElements(struct Element **pElementList)
 {
     
+    /* Dichiaro un contatore di elementi */
     UINT32_T UINT32_Counter=0;
+    /* Dichiaro un puntatore temporaneo ad un elemento della lista */
     struct Element *pTempElement;
     
+    /* Se la list punta a NULL vuol dire che la lista e' vuota */
+    if(*pElementList == NULL) return 0;
+
+    /* Assegno al puntatore temporaneo l'indirizzo del primo elemento della lista */
     pTempElement = *pElementList;
-    
-    if((*pElementList)->pNextElement == NULL) return 0;
+    /* Incremento il valore del contatore */
     UINT32_Counter++;
     
+    /* Ciclo sin quando ci sono elementi  */
     while(pTempElement->pNextElement != NULL)
     {
+        /* Assegno al puntatore temporaneo l'indirizzo di memoria del porssimo elemento della lista */
         pTempElement = pTempElement->pNextElement;
+        /* Incremento il valore del contatore */
         UINT32_Counter++;
     } 
+
+    /* Restituisco il numero di elementi contati */
     return UINT32_Counter;
 }
 
 void requestNewElement(struct Element **pElement)
 {
     
+    /* Alloca la memomoria ed inserisce l'indirizzo puntato da pElement */
     *pElement= (struct Element *)malloc(sizeof(struct Element));
 
     printf("Inserisci il valore da inserire di IDX:");
@@ -57,8 +68,11 @@ void requestNewElement(struct Element **pElement)
 /* Inserimento in testa */
 void pushHeadElement(struct Element **pElementList, struct Element *pElement)
 {
+    /* Assegna al puntatore del prossimo elemento dell'elemento da inserire
+        l'indirizzo di memoria della testa della lista */
     pElement->pNextElement = *pElementList;
     
+    /* Aggiorno la testa della lista con l'indirizzo di memoria del nuovo elemento */
     *pElementList = pElement;
     
 }
@@ -97,7 +111,6 @@ void push(struct Element **pElementList, struct Element *pElement)
             con l'indirizzo di memoria dell'elemento passato per argomento.
         */
         pLastElement->pNextElement = pElement;
-       
    }    
 }   
 
@@ -105,7 +118,8 @@ void push(struct Element **pElementList, struct Element *pElement)
 void pop(struct Element **pElementList, struct Element **pElement)
 {
     /* Assegna all'indirizzo dell'elemento passato come parametro
-        l'indirizzo dell'elemento in testa della coda */
+        l'indirizzo dell'elemento in testa della coda 
+    */
     *pElement = *pElementList;
     /* Assegna l'indirizzo del secondo elemento presente in coda come testa della lista */
     *pElementList = (*pElementList)->pNextElement;
@@ -114,15 +128,29 @@ void pop(struct Element **pElementList, struct Element **pElement)
 /* Cancellazione in coda */
 void popLastElement(struct Element **pElementList, struct Element **pElement)
 {
+    /* Crea un puntatore ad un elemento temporaneo */
     struct Element *pTempElement;
 
+    /* Verifica che la lista abbia un solo elemento */
+    if(countListElements(pElementList) == 1) 
+    {
+        /* Effettua la pop dell'unico elemento */
+        pop(pElementList, pElement);
+        return;
+    }
+    /* Assegno al puntatore temporaneo l'indirizzo del primo elemento della lista */
     pTempElement = *pElementList;
+
+    /* Verifico che il valore successivo sia diverso da null */
     while(pTempElement->pNextElement->pNextElement != NULL)
     {
+        /* Assegna al puntatore temporaneo l'elemento successivo della lista */
         pTempElement = pTempElement->pNextElement;
     }
     
+    /* Assegna al puntatore di element l'indirizzo dell'ultimo elemento */
     *pElement =pTempElement->pNextElement;
+    /* Imposta a NULL l'ultimo puntatore di collegamento per interrompere la lista */
     pTempElement->pNextElement = NULL;
 
     free(pTempElement->pNextElement);
@@ -185,23 +213,27 @@ int main()
     struct Element *pElementPopped;
     struct Element *pHeadElement;
 
+    printf("Primo: %p\n", &pElement);
     initList(&pElementsList);
-    
-    /* Semplice sezione di debug!
-        Andrebbe implementato un ciclo ma ora non ne ho voglia!
-    */
+
     requestNewElement(&pElement);
 
     push(&pElementsList, pElement);
 
-    requestNewElement(&pElement);
+
+    popLastElement(&pElementsList, &pElement);
+    
+    printf("%d", pElement->UINT32_Idx);
+    /* requestNewElement(&pElement);
+
 
     push(&pElementsList, pElement);
 
     printf("%d\n", countListElements(&pElementsList));
 
 
-    printList(&pElementsList);
+    printList(&pElementsList); */
     
     return 0;
 }
+
