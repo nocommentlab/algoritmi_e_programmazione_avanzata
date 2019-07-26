@@ -1,26 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-#ifndef TRUE
-    #define TRUE 1
-#endif
-
-#ifndef FALSE
-    #define FALSE 0
-#endif
-
-
-typedef unsigned int UINT32_T;
-typedef int INT32_T;
-typedef unsigned int BOOL_T;
-
-
-struct Queue
-{
-    UINT32_T UINT32_Value;
-
-    struct Queue *pNextElement;
-};
+#include "TYPEDef.h"
 
 void initQueue(struct Queue **ppQueue);
 void requestElement(struct Queue **ppElement);
