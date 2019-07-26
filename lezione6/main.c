@@ -249,16 +249,7 @@ int main()
 
     deleteElementAt(&pElementsList, 3);
     
-    //printf("%d", pElement->UINT32_Idx);
-    /* requestNewElement(&pElement);
 
-
-    push(&pElementsList, pElement);
-
-    printf("%d\n", countListElements(&pElementsList));
-
-
-    printList(&pElementsList); */
 
     printList(&pElementsList);
     
