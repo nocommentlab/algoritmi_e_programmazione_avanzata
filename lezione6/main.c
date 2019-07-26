@@ -189,7 +189,26 @@ void insertElementAt(struct Element **pElementList, struct Element *pElement, UI
 /* Cancellazione posizione p */
 void deleteElementAt(struct Element **pElementList, UINT32_T UINT32_Position)
 {
-    /* Da implementare */
+    struct Element *pTempElement;
+    UINT32_T UINT32_Idx = 0;
+
+    pTempElement = *pElementList;
+
+    if(UINT32_Position == 0){ pop(pElementList, &pTempElement); return;}
+    if(UINT32_Position == (countListElements(pElementList)-1)){popLastElement(pElementList, &pTempElement); return;} 
+
+    while(pTempElement->pNextElement != NULL)
+    {
+        if(UINT32_Idx == (UINT32_Position-1))
+        {
+            
+            pTempElement->pNextElement = pTempElement->pNextElement->pNextElement;
+            free(pTempElement->pNextElement);
+        }
+        pTempElement = pTempElement->pNextElement;
+        UINT32_Idx++;
+    }
+   
 }
 void printList(struct Element  **pElementsList)
 {
@@ -217,13 +236,20 @@ int main()
     initList(&pElementsList);
 
     requestNewElement(&pElement);
-
     push(&pElementsList, pElement);
 
+    requestNewElement(&pElement);
+    push(&pElementsList, pElement);
 
-    popLastElement(&pElementsList, &pElement);
+    requestNewElement(&pElement);
+    push(&pElementsList, pElement);
     
-    printf("%d", pElement->UINT32_Idx);
+    requestNewElement(&pElement);
+    push(&pElementsList, pElement);
+
+    deleteElementAt(&pElementsList, 3);
+    
+    //printf("%d", pElement->UINT32_Idx);
     /* requestNewElement(&pElement);
 
 
@@ -233,6 +259,8 @@ int main()
 
 
     printList(&pElementsList); */
+
+    printList(&pElementsList);
     
     return 0;
 }
