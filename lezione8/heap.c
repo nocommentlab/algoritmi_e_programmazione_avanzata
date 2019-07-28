@@ -5,13 +5,14 @@
 
 /* Definizione delle funzioni */
 UINT32_T max(UINT32_T num1, UINT32_T num2, UINT32_T num3);
-void indexOf(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32_Value, BOOL_T *pElementFound);
-
+UINT32_T indexOf(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32_Value, BOOL_T *pElementFound);
 void requestElements(UINT32_T **pUINT32_Array, UINT32_T *pUINT32_ArraySize);
-void heapify(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32_IdxRadix);
-void buildHeap(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize);
+void heapify(UINT32_T **pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32_IdxRadix);
+void buildHeap(UINT32_T **pUINT32_Array, UINT32_T UINT32_ArraySize);
 UINT32_T extractMax(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize);
 void insert(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32_Element);
+void printArray(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize);
+
 
 UINT32_T *_pUINT32_Array;
 UINT32_T _UINT32_ArraySize;
@@ -51,30 +52,43 @@ UINT32_T max(UINT32_T num1, UINT32_T num2, UINT32_T num3)
     return max;
 }
 
-void indexOf(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32_Value, BOOL_T *pElementFound)
+UINT32_T indexOf(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32_Value, BOOL_T *pElementFound)
 {
     UINT32_T UINT32_Idx = 0;
     *pElementFound = FALSE;
 
-    while ( (UINT32_Idx < UINT32_ArraySize) && (FALSE != *pElementFound))
+    while ( (UINT32_Idx < UINT32_ArraySize) && (FALSE == *pElementFound))
     {
+        
         if(UINT32_Value == pUINT32_Array[UINT32_Idx])
         {
             *pElementFound = TRUE;
         }
-        UINT32_Idx++;
+        else
+        {
+            UINT32_Idx++;
+        }
     } 
-    
+    return UINT32_Idx;
 }
+
 void requestElements(UINT32_T **pUINT32_Array, UINT32_T *pUINT32_ArraySize)
-{                    
+{       
+    UINT32_T UINT32_Idx;
+
     printf("Inserisci la dimensione dell'ARRAY:");
     scanf("%d", pUINT32_ArraySize);
 
     *pUINT32_Array = malloc(*pUINT32_ArraySize * sizeof(UINT32_T));
+
+    for(UINT32_Idx=0; UINT32_Idx < *pUINT32_ArraySize; UINT32_Idx++)
+    {
+        printf("Element[%d]:", UINT32_Idx);
+        scanf("%u", &((*pUINT32_Array)[UINT32_Idx]));
+    }
 }
 
-void heapify(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32_IdxRadix)
+void heapify(UINT32_T **pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32_IdxRadix)
 {
     UINT32_T UINT32_IdxLeftChild;
     UINT32_T UINT32_ValueLeftChild;
@@ -83,19 +97,66 @@ void heapify(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32
     UINT32_T UINT32_ValueRightChild;
 
     UINT32_T UINT32_Max;
+    UINT32_T UINT32_IdxLarghest;
+    BOOL_T BOOL_ElementFound;
+    UINT32_T UINT32_ElementTemp;
+
     /* Ricava gli indici dei figli sinistro e destro */
-    UINT32_IdxLeftChild = 2*UINT32_IdxRadix;
-    UINT32_ValueLeftChild = pUINT32_Array[UINT32_IdxLeftChild];
-    UINT32_IdxRightChid = 2*UINT32_IdxRadix+1;
-    UINT32_ValueRightChild = pUINT32_Array[UINT32_IdxRightChid];
+    UINT32_IdxLeftChild = 2*UINT32_IdxRadix+1;
+    UINT32_ValueLeftChild = (*pUINT32_Array)[UINT32_IdxLeftChild];
+    UINT32_IdxRightChid = 2*UINT32_IdxRadix+2;
+    UINT32_ValueRightChild = (*pUINT32_Array)[UINT32_IdxRightChid];
 
-    UINT32_Max = max(pUINT32_Array[UINT32_IdxRadix], UINT32_ValueLeftChild, UINT32_ValueRightChild);
+    UINT32_Max = max((*pUINT32_Array)[UINT32_IdxRadix], UINT32_ValueLeftChild, UINT32_ValueRightChild);
+    
+    UINT32_IdxLarghest = indexOf((*pUINT32_Array), UINT32_ArraySize, UINT32_Max, &BOOL_ElementFound);
+    if(TRUE == BOOL_ElementFound)
+    {
+        if(UINT32_IdxLarghest != UINT32_IdxRadix)
+        {
+            UINT32_ElementTemp = (*pUINT32_Array)[UINT32_IdxRadix];
+            (*pUINT32_Array)[UINT32_IdxRadix] = (*pUINT32_Array)[UINT32_IdxLarghest];
+            (*pUINT32_Array)[UINT32_IdxLarghest] = UINT32_ElementTemp;
+            
+            heapify(&_pUINT32_Array, _UINT32_ArraySize, UINT32_IdxLarghest);
 
+        }
+    }
 }
 
+void buildHeap(UINT32_T **pUINT32_Array, UINT32_T UINT32_ArraySize)
+{
+    INT32_T INT32_Idx;
+
+    INT32_Idx = (INT32_T)UINT32_ArraySize-1;
+
+    while(INT32_Idx >= 0)
+    {
+        heapify(&(*pUINT32_Array), UINT32_ArraySize, INT32_Idx);
+        INT32_Idx--;
+    }
+}
+
+void printArray(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize)
+{
+    UINT32_T UINT32_Idx;
+
+    for(UINT32_Idx = 0; UINT32_Idx < UINT32_ArraySize; UINT32_Idx++)
+    {
+        printf("%d\n", pUINT32_Array[UINT32_Idx]);
+    }
+}
 int main()
 {
+    
+    BOOL_T BOOL_ElementFound = FALSE;
+    UINT32_T UINT32_IdxFound =0;
+
     requestElements(&_pUINT32_Array, &_UINT32_ArraySize);
 
+    buildHeap(&_pUINT32_Array, _UINT32_ArraySize);
+
+    printArray(_pUINT32_Array, _UINT32_ArraySize);
+    
     return 0;
 }
