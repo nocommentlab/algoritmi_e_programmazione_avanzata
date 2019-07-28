@@ -9,7 +9,7 @@ UINT32_T indexOf(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UI
 void requestElements(UINT32_T **pUINT32_Array, UINT32_T *pUINT32_ArraySize);
 void heapify(UINT32_T **pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32_IdxRadix);
 void buildHeap(UINT32_T **pUINT32_Array, UINT32_T UINT32_ArraySize);
-UINT32_T extractMax(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize);
+UINT32_T extractMax(UINT32_T **pUINT32_Array, UINT32_T *pUINT32_ArraySize);
 void insert(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32_Element);
 void printArray(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize);
 
@@ -137,6 +137,25 @@ void buildHeap(UINT32_T **pUINT32_Array, UINT32_T UINT32_ArraySize)
     }
 }
 
+UINT32_T extractMax(UINT32_T **pUINT32_Array, UINT32_T *pUINT32_ArraySize)
+{
+    UINT32_T UINT32_Max;
+    if(*pUINT32_Array == NULL)
+    {
+        printf("Empty queue");
+        return 0;
+    }
+    else
+    {
+        UINT32_Max = (*pUINT32_Array)[0];
+        (*pUINT32_Array)[0]=(*pUINT32_Array)[*pUINT32_ArraySize-1];
+        *pUINT32_ArraySize -=1;
+        heapify(pUINT32_Array, *pUINT32_ArraySize, 0);
+
+        return UINT32_Max;
+    }
+    
+}
 void printArray(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize)
 {
     UINT32_T UINT32_Idx;
@@ -151,10 +170,14 @@ int main()
     
     BOOL_T BOOL_ElementFound = FALSE;
     UINT32_T UINT32_IdxFound =0;
-
+    UINT32_T UINT32_Max;
+    
     requestElements(&_pUINT32_Array, &_UINT32_ArraySize);
 
     buildHeap(&_pUINT32_Array, _UINT32_ArraySize);
+
+    UINT32_Max = extractMax(&_pUINT32_Array, &_UINT32_ArraySize);
+    printf("Max:%u", UINT32_Max);
 
     printArray(_pUINT32_Array, _UINT32_ArraySize);
     
