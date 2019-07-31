@@ -24,22 +24,22 @@ void requestElements(UINT32_T **pUINT32_Array, UINT32_T *pUINT32_Size)
 void insertionSort(UINT32_T **pUINT32_Array, UINT32_T UINT32_Size)
 {
     UINT32_T UINT32_Idx;
-    UINT32_T UINT32_Key;
-    UINT32_T UINT32_I;
+    UINT32_T UINT32_Value = 0;
+    INT32_T INT32_I = 0;
 
     for(UINT32_Idx = 1; UINT32_Idx < UINT32_Size; UINT32_Idx++)
     {
-        UINT32_Key = (*pUINT32_Array)[UINT32_Idx];
-        UINT32_I = UINT32_Idx - 1;
-
-        while(UINT32_I > 0 && ((*pUINT32_Array)[UINT32_I] > UINT32_Key))
+        UINT32_Value = (*pUINT32_Array)[UINT32_Idx];
+        INT32_I = UINT32_Idx - 1;
+        
+        while(INT32_I >= 0 && (((*pUINT32_Array)[INT32_I]) > UINT32_Value))
         {
-                (*pUINT32_Array)[UINT32_I + 1] = (*pUINT32_Array)[UINT32_I];
-                UINT32_I = UINT32_I - 1;
+
+            (*pUINT32_Array)[INT32_I + 1] = (*pUINT32_Array)[INT32_I];
+            INT32_I = INT32_I - 1;
+            
         }
-
-        (*pUINT32_Array)[UINT32_I+1] = UINT32_Key;
-
+        (*pUINT32_Array)[INT32_I+1] = UINT32_Value;
     }
 }
 
