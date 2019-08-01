@@ -5,6 +5,7 @@
 void requestElements(UINT32_T **pUINT32_Array, UINT32_T *pUINT32_Size);
 void insertionSort(UINT32_T **pUINT32_Array, UINT32_T UINT32_Size);
 void printArray(UINT32_T *pUINT32_Array, UINT32_T UINT32_Size);
+INT32_T binarySearch(UINT32_T *pUINT32_Array, UINT32_T UINT32_IdxFirstElement, UINT32_T UINT32_IdxLastElement, UINT32_T UINT32_ElementToSearch);
 
 void requestElements(UINT32_T **pUINT32_Array, UINT32_T *pUINT32_Size)
 {
@@ -43,6 +44,38 @@ void insertionSort(UINT32_T **pUINT32_Array, UINT32_T UINT32_Size)
     }
 }
 
+/* L'array in input deve essere ordinato! */
+INT32_T binarySearch(UINT32_T *pUINT32_Array, UINT32_T UINT32_IdxFirstElement, UINT32_T UINT32_IdxLastElement, UINT32_T UINT32_ElementToSearch)
+{
+    UINT32_T UINT32_Idx = 0;
+
+    if( (UINT32_ElementToSearch < *(pUINT32_Array+UINT32_IdxFirstElement)) || (UINT32_ElementToSearch > *(pUINT32_Array+UINT32_IdxLastElement) ))
+    {
+        return -1;
+    }
+    while(UINT32_IdxFirstElement <= UINT32_IdxLastElement)
+    {
+        UINT32_Idx = (UINT32_T)((UINT32_IdxFirstElement+UINT32_IdxLastElement)/2);
+        
+        if( *(pUINT32_Array+UINT32_Idx) == UINT32_ElementToSearch)
+        {
+            return UINT32_Idx;
+
+        }
+        if( *(pUINT32_Array+UINT32_Idx) > UINT32_ElementToSearch)
+        {
+            UINT32_IdxLastElement = UINT32_Idx-1;
+        }
+        else
+        {
+            UINT32_IdxFirstElement = UINT32_Idx+1;
+        }
+        
+    }
+
+    return -1;
+}
+
 void printArray(UINT32_T *pUINT32_Array, UINT32_T UINT32_Size)
 {
     UINT32_T UINT32_Idx;
@@ -60,6 +93,7 @@ int main()
 
     requestElements(&pUINT32_Array, &UINT32_ArraySize);
     insertionSort(&pUINT32_Array, UINT32_ArraySize);
+    printf("Element at: %d\n", binarySearch(pUINT32_Array, 0, UINT32_ArraySize-1, 1));
     printArray(pUINT32_Array, UINT32_ArraySize);
 
     return 0;
