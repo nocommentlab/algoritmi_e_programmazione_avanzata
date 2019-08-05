@@ -4,8 +4,6 @@
 #include "TYPEDef.h"
 
 /* Definizione delle funzioni */
-UINT32_T max(UINT32_T num1, UINT32_T num2, UINT32_T num3);
-UINT32_T indexOf(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32_Value, BOOL_T *pElementFound);
 void requestElements(UINT32_T **pUINT32_Array, UINT32_T *pUINT32_ArraySize);
 void heapify(UINT32_T **pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32_IdxRadix);
 void buildHeap(UINT32_T **pUINT32_Array, UINT32_T UINT32_ArraySize);
@@ -19,59 +17,48 @@ UINT32_T *_pUINT32_Array;
 UINT32_T _UINT32_ArraySize;
 
 
-UINT32_T max(UINT32_T num1, UINT32_T num2, UINT32_T num3)
+/* Time complexity of heapify is O(Logn) */
+void heapify(UINT32_T **pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32_IdxRadix)
 {
-    /*https://codeforwin.org/2015/05/c-program-to-find-maximum.html*/
-    UINT32_T max;
-    if(num1 > num2)
+    INT32_T INT32_Largest = UINT32_IdxRadix;
+    INT32_T INT32_IdxLeftChild = 2*UINT32_IdxRadix + 1;
+    INT32_T INT32_IdxRightChild = 2*UINT32_IdxRadix + 2;
+    UINT32_T UINT32_TempValue;
+
+    if( (INT32_IdxLeftChild < UINT32_ArraySize) && 
+        ((*pUINT32_Array)[INT32_IdxLeftChild] > (*pUINT32_Array)[INT32_Largest]))
     {
-        if(num1 > num3)
-        {
-            /* If num1 > num2 and num1 > num3 */
-            max = num1;
-        }
-        else
-        {
-            /* If num1 > num2 but num1 > num3 is not true */
-            max = num3;
-        }
-    }
-    else
-    {
-        if(num2 > num3)
-        {
-            /* If num1 is not > num2 and num2 > num3 */
-            max = num2;
-        }
-        else
-        {
-            /* If num1 is not > num2 and num2 > num3 */
-            max = num3;
-        }
+        INT32_Largest = INT32_IdxLeftChild;
     }
 
-    return max;
-}
-
-UINT32_T indexOf(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32_Value, BOOL_T *pElementFound)
-{
-    UINT32_T UINT32_Idx = 0;
-    *pElementFound = FALSE;
-
-    while ( (UINT32_Idx < UINT32_ArraySize) && (FALSE == *pElementFound))
+    if( (INT32_IdxRightChild < UINT32_ArraySize) && 
+        ((*pUINT32_Array)[INT32_IdxRightChild] > (*pUINT32_Array)[INT32_Largest]))
     {
-        
-        if(UINT32_Value == pUINT32_Array[UINT32_Idx])
-        {
-            *pElementFound = TRUE;
-        }
-        else
-        {
-            UINT32_Idx++;
-        }
-    } 
-    return UINT32_Idx;
+        INT32_Largest = INT32_IdxRightChild;
+    }
+
+    if(INT32_Largest != UINT32_IdxRadix)
+    {
+        UINT32_TempValue = (*pUINT32_Array)[UINT32_IdxRadix];
+        (*pUINT32_Array)[UINT32_IdxRadix] = (*pUINT32_Array)[INT32_Largest];
+        (*pUINT32_Array)[INT32_Largest] = UINT32_TempValue;
+
+        heapify(pUINT32_Array, UINT32_ArraySize, INT32_Largest);
+    }
+
 }
+
+/* Time complexity of createAndBuildHeap() is O(n) */
+void buildHeap(UINT32_T **pUINT32_Array, UINT32_T UINT32_ArraySize)
+{
+    INT32_T INT32_Idx;
+
+    for(INT32_Idx = ((UINT32_ArraySize / 2) - 1); INT32_Idx >=0; INT32_Idx--)
+    {
+        heapify(pUINT32_Array, UINT32_ArraySize, INT32_Idx);
+    }
+}
+
 
 void requestElements(UINT32_T **pUINT32_Array, UINT32_T *pUINT32_ArraySize)
 {       
@@ -86,55 +73,6 @@ void requestElements(UINT32_T **pUINT32_Array, UINT32_T *pUINT32_ArraySize)
     {
         printf("Element[%d]:", UINT32_Idx);
         scanf("%u", &((*pUINT32_Array)[UINT32_Idx]));
-    }
-}
-
-void heapify(UINT32_T **pUINT32_Array, UINT32_T UINT32_ArraySize, UINT32_T UINT32_IdxRadix)
-{
-    UINT32_T UINT32_IdxLeftChild;
-    UINT32_T UINT32_ValueLeftChild;
-
-    UINT32_T UINT32_IdxRightChid;
-    UINT32_T UINT32_ValueRightChild;
-
-    UINT32_T UINT32_Max;
-    UINT32_T UINT32_IdxLarghest;
-    BOOL_T BOOL_ElementFound;
-    UINT32_T UINT32_ElementTemp;
-
-    /* Ricava gli indici dei figli sinistro e destro */
-    UINT32_IdxLeftChild = 2*UINT32_IdxRadix+1;
-    UINT32_ValueLeftChild = (*pUINT32_Array)[UINT32_IdxLeftChild];
-    UINT32_IdxRightChid = 2*UINT32_IdxRadix+2;
-    UINT32_ValueRightChild = (*pUINT32_Array)[UINT32_IdxRightChid];
-
-    UINT32_Max = max((*pUINT32_Array)[UINT32_IdxRadix], UINT32_ValueLeftChild, UINT32_ValueRightChild);
-    
-    UINT32_IdxLarghest = indexOf((*pUINT32_Array), UINT32_ArraySize, UINT32_Max, &BOOL_ElementFound);
-    if(TRUE == BOOL_ElementFound)
-    {
-        if(UINT32_IdxLarghest != UINT32_IdxRadix)
-        {
-            UINT32_ElementTemp = (*pUINT32_Array)[UINT32_IdxRadix];
-            (*pUINT32_Array)[UINT32_IdxRadix] = (*pUINT32_Array)[UINT32_IdxLarghest];
-            (*pUINT32_Array)[UINT32_IdxLarghest] = UINT32_ElementTemp;
-            
-            heapify(&_pUINT32_Array, _UINT32_ArraySize, UINT32_IdxLarghest);
-
-        }
-    }
-}
-
-void buildHeap(UINT32_T **pUINT32_Array, UINT32_T UINT32_ArraySize)
-{
-    INT32_T INT32_Idx;
-
-    INT32_Idx = (INT32_T)UINT32_ArraySize-1;
-
-    while(INT32_Idx >= 0)
-    {
-        heapify(&(*pUINT32_Array), UINT32_ArraySize, INT32_Idx);
-        INT32_Idx--;
     }
 }
 
@@ -157,6 +95,7 @@ UINT32_T extractMax(UINT32_T **pUINT32_Array, UINT32_T *pUINT32_ArraySize)
     }
     
 }
+
 void printArray(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize)
 {
     UINT32_T UINT32_Idx;
@@ -167,25 +106,23 @@ void printArray(UINT32_T *pUINT32_Array, UINT32_T UINT32_ArraySize)
     }
 }
 
+/* overall time complexity of Heap Sort is O(nLogn) */
 void heapSort(UINT32_T **pUINT32_Array, UINT32_T UINT32_ArraySize)
 {
-    UINT32_T UINT32_Idx;
-    UINT32_T UINT32_Temp;
-    
+    INT32_T INT32_Idx;
+    UINT32_T UINT32_TempValue;
+
     buildHeap(pUINT32_Array, UINT32_ArraySize);
-    
-    
-    for(UINT32_Idx=UINT32_ArraySize; UINT32_Idx >=1; UINT32_Idx--)
+
+    for(INT32_Idx = UINT32_ArraySize-1; INT32_Idx >=0; INT32_Idx--)
     {
-        UINT32_Temp = (*pUINT32_Array)[0];
-        (*pUINT32_Array)[0] = (*pUINT32_Array)[UINT32_Idx-1];
-        (*pUINT32_Array)[UINT32_Idx-1] = UINT32_Temp;
-        printf("Change: %u %u\n", (*pUINT32_Array)[0], (*pUINT32_Array)[UINT32_Idx-1]);
-        UINT32_ArraySize--;
+        UINT32_TempValue = (*pUINT32_Array)[INT32_Idx];
+        (*pUINT32_Array)[INT32_Idx] = (*pUINT32_Array)[0];
+        (*pUINT32_Array)[0] = UINT32_TempValue;
 
-        heapify(pUINT32_Array, UINT32_ArraySize, 0);
+        heapify(pUINT32_Array, INT32_Idx, 0);
     }
-
+    
 }
 
 int main()
@@ -197,10 +134,9 @@ int main()
     
     requestElements(&_pUINT32_Array, &_UINT32_ArraySize);
 
-    //buildHeap(&_pUINT32_Array, _UINT32_ArraySize);
-    //UINT32_Max = extractMax(&_pUINT32_Array, &_UINT32_ArraySize);
-    //printf("Max:%u", UINT32_Max);
-    heapSort(&_pUINT32_Array, _UINT32_ArraySize);
+    buildHeap(&_pUINT32_Array, _UINT32_ArraySize);
+    //heapSort(&_pUINT32_Array, _UINT32_ArraySize);
+    
     printArray(_pUINT32_Array, _UINT32_ArraySize);
     
     return 0;
