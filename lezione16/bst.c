@@ -2,8 +2,18 @@
 #include <stdlib.h>
 #include "TYPEDef.h"
 
+/* 
+References:
+Online BST Tool: http://btv.melezinek.cz/binary-search-tree.html
+
+Inorder (Left, Root, Right)
+Preorder (Root, Left, Right)
+Postorder (Left, Right, Root)
+*/
 struct NODE_TS *newNode(INT32_T INT32_Key);
 void inorder(struct NODE_TS *pNODE_Root);
+void preorder(struct NODE_TS *pNODE_Root);
+void pstorder(struct NODE_TS *pNODE_Root);
 struct NODE_TS *insert(struct NODE_TS *pNODE_Node, INT32_T INT32_Key);
 struct NODE_TS *search(struct NODE_TS *pNODE_Root, INT32_T INT32_Key);
 struct NODE_TS *minValueNode(struct NODE_TS *pNODE_Node);
@@ -22,6 +32,7 @@ struct NODE_TS *newNode(INT32_T INT32_Key)
     return pNODE_Temp;
 }
 
+/* Complessita': θ(h) dove h e' altezza albero */
 void inorder(struct NODE_TS *pNODE_Root)
 {
     if(NULL != pNODE_Root)
@@ -29,6 +40,26 @@ void inorder(struct NODE_TS *pNODE_Root)
         inorder(pNODE_Root->pNODE_Left);
         printf("%d\n", pNODE_Root->INT32_Key);
         inorder(pNODE_Root->pNODE_Right);
+    }
+}
+void postorder(struct NODE_TS *pNODE_Root)
+{
+    if(NULL != pNODE_Root)
+    {
+        postorder(pNODE_Root->pNODE_Left);
+        postorder(pNODE_Root->pNODE_Right);
+        printf("%d\n", pNODE_Root->INT32_Key);
+    }
+}
+
+void preorder(struct NODE_TS *pNODE_Root)
+{
+    if(NULL != pNODE_Root)
+    {
+        printf("%d\n", pNODE_Root->INT32_Key);
+        preorder(pNODE_Root->pNODE_Left);
+        preorder(pNODE_Root->pNODE_Right);
+        
     }
 }
 
@@ -53,6 +84,8 @@ struct NODE_TS *insert(struct NODE_TS *pNODE_Node, INT32_T INT32_Key)
 
 }
 
+/* Complessita: T(n) = T(n/2) + θ(1) => O(log n)
+   Caso Peggiore: T(n) = O(h)*/
 struct NODE_TS *search(struct NODE_TS *pNODE_Root, INT32_T INT32_Key)
 {
     if ((NULL == pNODE_Root) || (INT32_Key == pNODE_Root->INT32_Key))
@@ -80,6 +113,7 @@ struct NODE_TS *minValueNode(struct NODE_TS *pNODE_Node)
     return pNODE_CurrentNode;
 }
 
+/* Caso Peggiore: T(n) = O(h) */
 struct NODE_TS *delete(struct NODE_TS *pNODE_Root, INT32_T INT32_Key)
 {
     struct NODE_TS *pNODE_Temp = NULL;
